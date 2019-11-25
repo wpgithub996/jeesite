@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.UserDao">
+	 <resultMap id="volumeResult" type="Volume">
+		<id property="id" column="id" />
+		<result property="topicName" column="topic_name" /><!--调查问卷名称-->
+		 <result property="topicNumber" column="topic_number" /><!--调查问卷时间-->
+		 <result property="topicDate" column="topi_date" /><!--调查问卷时间-->
+		 <result property="topicAreaId" column="topic_area_id" /><!--调查表所属地区-->
+		 <result property="topicOneId" column="topic_one_id" /><!--单选题id-->
+		 <result property="topicOneAnswer" column="topic_one_answer" /><!--单选题答案-->
+		 <result property="topicManyId" column="topic_many_id" /><!--多选题id-->
+		 <result property="topicManyAnswer" column="topic_many_answer" /><!--多选题答案-->
+		 <result property="topicFillEmptyId" column="topic_fill_empty_id" /><!--填空题id-->
+		 <result property="topicFillEmptyAnswer" column="topic_fill_empty_answer" /><!--填空题答案-->
+		 <result property="topicExplainName" column="topic_explain_name" /><!--描述说明标题-->
+		 <result property="topicExplainContent" column="topic_explain_content" /><!--描述说明内容-->
+
+	</resultMap>
+
+    <sql id="volumeColumns">
+		  iqi.id,
+		  iqi.topic_name,
+		  iqi.topic_number,
+		  iqi.topic_date,
+		  iqi.topic_one_answer,
+		  iqi.topic_many_answer,
+		  iqi.topic_fill_empty_answer,
+		  iqi.topic_explain_name,
+		  iqi.topic_explain_content,
+		  iqi.topic_area_id,
+/*		  sa.id AS "company.area.id",
+    	  sa.name AS "company.area.name",
+    	  sa.parent_id AS "company.area.parent.id",
+    	  sa.parent_ids AS "company.area.parentIds",*/
+    	  iot.id ,
+    	  iot.topic_one_name,
+    	  iot.topic_one_option,
+    	  iot.topic_one_score,
+    	  iot.topic_one_answer,
+    	  imt.,id
+    	  imt.topic_many_name,
+    	  imt.topic_many_option,
+    	  imt.topic_many_score,
+    	  imt.topic_many_correct_answer,
+    	  ifet.id,
+    	  ifet.topic_fill_empty_name,
+    	  ifet.topic_fill_empty_content,
+    	  ifet.topic_fill_empty_score,
+    	  ifet.topic_fill_empty_correct_answer
+    </sql>
+
+    <sql id="volumeJoins">
+		LEFT JOIN sys_area sa ON sa.id = iqi.topic_area_id
+		LEFT JOIN inv_one_topic iot ON iot.inv_qu_info_number = iqi.topic_number
+		LEFT JOIN inv_many_topic imt ON imt.inv_qu_info_number = iqi.topic_number
+		LEFT JOIN inv_fill_empty_topic ifet ON ifet.inv_qu_info_number = iqi.topic_number
+    </sql>
+
+		<insert id="saveInfo" >
+			INSERT INTO inv_qu_info
+			(id,topic_name,topic_number,topic_date,topic_one_answer,topic_many_answer,topic_fill_empty_answer,topic_explain_name,topic_explain_content,topic_area_id)
+			VALUES (#{id},#{topicName},#{topicNumber},#{topicDate},#{topicOneAnswer},#{topicManyAnswer},#{topicFillEmptyAnswer},#{topicExplainName},#{topicExplainContent},#{topicAreaId})
+		</insert>
+		<insert id="saveOne">
+			INSERT INTO inv_one_topic
+			(id,topic_one_name,topic_one_option,topic_one_score,topic_one_answer,inv_qu_info_number)
+			 VALUES (#{id},#{topicOneName},#{topicOneOption},#{topicOneScore},#{topicOneAnswer},#{invQuInfoNumber})
+		</insert>
+
+</mapper>
